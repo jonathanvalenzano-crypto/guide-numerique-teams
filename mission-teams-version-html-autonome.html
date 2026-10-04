@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mission Teams : apprends Microsoft Teams pas à pas</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; background: linear-gradient(#eef0fb, #fff); color: #333; min-height: 100vh; }
+  button { font-family: inherit; cursor: pointer; }
+  .header { background: #5049a7; display: flex; align-items: center; gap: 14px; padding: 16px 22px; }
+  .header .logo { width: 44px; height: 44px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .header .ht { flex: 1; color: #fff; }
+  .header .ht b { display: block; font-size: 18px; }
+  .header .ht span { font-size: 12px; opacity: .85; }
+  .btn-home-top { background: rgba(255,255,255,.15); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
+  .btn-home-top:hover { background: rgba(255,255,255,.25); }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 22px 18px 40px; }
+  .progress-wrap { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 10px 22px; display: flex; align-items: center; gap: 10px; }
+  .progress-bar { flex: 1; height: 10px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+  .progress-bar > div { height: 100%; background: #5049a7; border-radius: 99px; transition: width .4s; }
+  .progress-label { font-size: 12px; color: #6b7280; white-space: nowrap; }
+
+  .home-head { text-align: center; margin: 10px 0 22px; }
+  .home-head .wave { font-size: 44px; }
+  .home-head h1 { font-size: 24px; margin: 6px 0; }
+  .home-head p { color: #4b5563; font-size: 14px; line-height: 1.6; max-width: 560px; margin: 0 auto; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .card { text-align: left; background: #fff; border: 2px solid #e5e7eb; border-radius: 14px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.05); transition: box-shadow .15s, border-color .15s; display: flex; gap: 12px; align-items: flex-start; }
+  .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.12); border-color: #c7d2fe; }
+  .card .c-emoji { font-size: 30px; }
+  .card .c-title { font-weight: 600; font-size: 14px; }
+  .card .c-desc { font-size: 12px; color: #6b7280; margin-top: 3px; line-height: 1.5; }
+
+  .bubble { background: #f3f0fb; border: 1px solid #5049a7; border-radius: 16px; padding: 12px 16px; font-size: 14px; line-height: 1.65; margin: 12px 0; }
+  .bubble-green { background: #e3f2e5; border-color: #2e7d32; }
+  .bubble ul, .bubble ol { margin: 4px 0 0 20px; padding: 0; }
+  .bubble li { margin: 2px 0; }
+
+  .chap-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .chap-num { width: 36px; height: 36px; border-radius: 99px; background: #5049a7; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .chap-head h2 { font-size: 19px; margin: 0; flex: 1; }
+  .chap-head .mini-home { font-size: 11px; color: #6b7280; text-decoration: underline; background: none; border: 0; padding: 4px; }
+  .lead { font-size: 13px; color: #4b5563; line-height: 1.6; margin: 0 0 14px; }
+
+  .window { border: 1px solid #d1d5db; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.12); background: #fff; }
+  .win-bar { background: #f3f4f6; border-bottom: 1px solid #d1d5db; padding: 7px 10px; display: flex; align-items: center; gap: 6px; }
+  .dot { width: 11px; height: 11px; border-radius: 99px; display: inline-block; }
+  .dot.r { background: #f87171; } .dot.y { background: #fbbf24; } .dot.g { background: #4ade80; }
+  .win-title { font-size: 11px; color: #6b7280; margin-left: 8px; }
+  .win-body { display: flex; }
+
+  .rail { background: #5049a7; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+  .rail-item { position: relative; width: 62px; padding: 8px 4px; border: 0; background: none; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; color: #fff; }
+  .rail-item:hover { background: rgba(255,255,255,.1); }
+  .rail-item.rail-active { background: rgba(255,255,255,.25); }
+  .rail-item.rail-dim { opacity: .6; }
+  .ri-e { font-size: 18px; }
+  .ri-l { font-size: 10px; line-height: 1.2; text-align: center; }
+  .rail-check { position: absolute; top: 2px; right: 6px; font-size: 10px; }
+  .here { position: absolute; top: -6px; right: -4px; font-size: 9px; background: #fde047; color: #1f2937; padding: 1px 4px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
+
+  .pane { flex: 1; padding: 16px; min-width: 0; min-height: 180px; font-size: 14px; }
+  .pane-title { font-size: 17px; font-weight: 600; color: #5049a7; margin-bottom: 6px; }
+  .hint { color: #9ca3af; font-style: italic; display: flex; align-items: center; justify-content: center; min-height: 140px; margin: 0; }
+
+  .panel { border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; margin-top: 12px; }
+  .panel-title { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 5px 12px; font-size: 11px; font-weight: 600; color: #6b7280; }
+  .mission { margin: 8px; border: 2px dashed #fb923c; background: #fff7ed; color: #9a3412; border-radius: 10px; padding: 10px 12px; font-size: 12px; line-height: 1.6; }
+  .mission-done { border: 1px solid #86efac; background: #f0fdf4; color: #166534; border-style: solid; }
+  .teams-list { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .team { border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+  .team-head { width: 100%; display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: none; border: 0; }
+  .team-head:hover { background: #f9fafb; }
+  .team-badge { width: 28px; height: 28px; border-radius: 7px; color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .team-name { flex: 1; text-align: left; font-size: 14px; font-weight: 600; color: #374151; }
+  .arrow { font-size: 10px; color: #9ca3af; }
+  .channel { display: flex; align-items: center; gap: 6px; padding: 0 8px 0 16px; border-radius: 8px; }
+  .channel:hover { background: #f9fafb; }
+  .channel-active { background: #e0e7ff; font-weight: 600; }
+  .channel-btn { flex: 1; text-align: left; background: none; border: 0; padding: 6px 0; font-size: 13px; color: #4b5563; }
+  .channel-active .channel-btn { color: #5049a7; }
+  .channel-hide { background: none; border: 0; font-size: 11px; opacity: 0; transition: opacity .1s; padding: 2px; }
+  .channel:hover .channel-hide { opacity: 1; }
+  .hidden-toggle { width: 100%; text-align: left; background: none; border: 0; padding: 6px 16px; font-size: 12px; color: #6b7280; }
+  .hidden-toggle:hover { background: #f9fafb; }
+  .hidden-channel { display: flex; align-items: center; padding: 6px 24px 6px 16px; font-size: 12px; color: #9ca3af; }
+  .hidden-channel span { flex: 1; text-align: left; }
+  .hidden-channel button { background: none; border: 0; font-size: 11px; color: #6b7280; text-decoration: underline; }
+  .panel-note { background: #eef2ff; border-top: 1px solid #e0e7ff; padding: 8px 12px; font-size: 11px; color: #4b5563; line-height: 1.6; }
+
+  .cal-toolbar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 6px 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11px; }
+  .cal-btn { border: 1px solid #d1d5db; background: #fff; border-radius: 6px; padding: 4px 8px; }
+  .cal-btn:hover { background: #f3f4f6; }
+  .cal-period { font-weight: 600; color: #374151; margin: 0 2px; }
+  .cal-spacer { flex: 1; }
+  .cal-btn-new { background: #5049a7; color: #fff; border: 0; border-radius: 6px; padding: 4px 10px; font-weight: 600; }
+  .cal-heads, .cal-row { display: grid; grid-template-columns: 44px repeat(5, 1fr); }
+  .cal-heads { background: #eef2ff; border-bottom: 1px solid #e5e7eb; }
+  .cal-day { text-align: center; padding: 6px 0; font-size: 11px; color: #4b5563; }
+  .cal-day.today { font-weight: 700; color: #5049a7; }
+  .cal-day .today-tag { font-size: 9px; font-weight: 400; }
+  .cal-hour { font-size: 9px; color: #9ca3af; text-align: right; padding-right: 4px; border-right: 1px solid #f3f4f6; height: 30px; }
+  .cal-cell { border-bottom: 1px solid #f3f4f6; border-left: 1px solid #f3f4f6; height: 30px; }
+  .cal-grid { position: relative; }
+  .cal-event { position: absolute; background: #5049a7; color: #fff; border: 0; border-radius: 6px; padding: 4px 6px; text-align: left; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+  .cal-event:hover { opacity: .9; }
+  .ce-t { display: block; font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ce-h { display: block; font-size: 10px; font-weight: 400; opacity: .85; }
+  .cal-detail { border-top: 1px solid #e5e7eb; background: #fff; padding: 8px 12px; font-size: 11px; line-height: 1.6; }
+
+  .chan-head { padding: 7px 14px; border-bottom: 1px solid #e5e7eb; font-size: 13px; font-weight: 600; color: #5049a7; }
+  .msgs { padding: 14px; display: flex; flex-direction: column; gap: 12px; max-height: 260px; overflow-y: auto; }
+  .msg { display: flex; gap: 10px; }
+  .avatar { width: 34px; height: 34px; border-radius: 99px; color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #5049a7; }
+  .avatar.prof { background: #c0392b; }
+  .msg-meta { font-size: 11px; color: #9ca3af; }
+  .msg-body { background: #f3f4f6; border-radius: 12px; padding: 8px 12px; font-size: 13px; margin-top: 3px; display: inline-block; }
+  .msg-file { display: inline-flex; align-items: center; gap: 6px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 6px 10px; font-size: 13px; margin-top: 4px; color: #5049a7; font-weight: 500; }
+  .composer { border-top: 1px solid #e5e7eb; padding: 10px 12px; }
+  .composer-row { display: flex; gap: 8px; }
+  .composer input { flex: 1; border: 1px solid #d1d5db; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+  .btn-primary { background: #5049a7; color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
+  .btn-primary:hover { opacity: .92; }
+  .btn-green { background: #2e7d32; }
+  .composer-tools { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .btn-attach { background: none; border: 1px solid #d1d5db; border-radius: 8px; padding: 5px 10px; font-size: 12px; font-weight: 600; color: #4b5563; }
+  .btn-attach:hover { border-color: #a5b4fc; color: #4338ca; }
+  .tiny { font-size: 11px; color: #9ca3af; }
+  .file-chip { display: flex; align-items: center; gap: 8px; background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 6px 10px; font-size: 13px; color: #5049a7; font-weight: 500; margin-bottom: 8px; }
+  .file-chip span { flex: 1; }
+  .file-chip button { background: none; border: 0; color: #9ca3af; }
+  .file-chip button:hover { color: #ef4444; }
+
+  .purple-bar { background: #5049a7; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 600; }
+  .searchbar { border: 1px solid #d1d5db; border-radius: 6px; padding: 5px 8px; font-size: 11px; color: #9ca3af; margin: 10px 14px 6px; }
+  .dv-tabs { display: flex; gap: 16px; font-size: 12px; padding: 0 14px; border-bottom: 1px solid #e5e7eb; }
+  .dv-tab { padding: 8px 0; color: #9ca3af; }
+  .dv-tab.active { color: #5049a7; font-weight: 600; border-bottom: 2px solid #5049a7; }
+  .dv-group { padding: 8px 14px 4px; font-size: 11px; font-weight: 600; color: #6b7280; border-top: 1px solid #f3f4f6; }
+  .dv-card { width: 100%; text-align: left; background: none; border: 0; display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-top: 1px solid #f3f4f6; }
+  .dv-card:hover { background: #f9fafb; }
+  .dv-card.static { opacity: .6; cursor: default; }
+  .course-badge { width: 36px; height: 36px; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .dv-main { flex: 1; min-width: 0; }
+  .dv-title { display: block; font-size: 13px; font-weight: 600; color: #5049a7; }
+  .dv-sub { display: block; font-size: 11px; color: #6b7280; margin-top: 2px; }
+  .chip { font-size: 10px; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; white-space: nowrap; }
+  .chip.afaire { background: #ffedd5; color: #c2410c; }
+  .chip.remis { background: #dcfce7; color: #15803d; }
+  .chip.termine { background: #dbeafe; color: #1d4ed8; }
+  .dv-note { padding: 8px 14px; font-size: 10px; color: #9ca3af; border-top: 1px solid #f3f4f6; line-height: 1.6; }
+  .dv-detail { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .back-link { background: none; border: 0; color: #6b7280; font-size: 12px; text-decoration: underline; padding: 0; align-self: flex-start; }
+  .dv-head-row { display: flex; align-items: center; gap: 10px; }
+  .dv-head-row .dv-title { font-size: 15px; flex: 1; }
+  .forms-box { border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+  .forms-head { background: #0a6c5d; color: #fff; padding: 7px 14px; font-size: 13px; font-weight: 600; }
+  .forms-body { padding: 14px; }
+  .forms-q { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+  .forms-opt { width: 100%; text-align: left; border: 2px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-size: 13px; background: #fff; margin-bottom: 6px; color: #374151; }
+  .forms-opt:hover { border-color: #9ca3af; }
+  .forms-opt.selected { border-color: #0f766e; background: #f0fdfa; font-weight: 600; color: #115e59; }
+  .forms-opt:disabled, .forms-send:disabled { cursor: default; opacity: .6; }
+  .forms-send { background: #0a6c5d; color: #fff; border: 0; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; margin-top: 6px; }
+
+  .visio-screen { background: #111827; border-radius: 10px; height: 160px; display: flex; align-items: center; justify-content: center; color: #d1d5db; font-size: 13px; text-align: center; padding: 0 14px; margin-bottom: 12px; }
+  .visio-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill { border: 0; border-radius: 99px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
+  .pill.off { background: #e5e7eb; color: #374151; }
+  .pill.mic-on { background: #ef4444; color: #fff; }
+  .pill.cam-on { background: #14b8a6; color: #fff; }
+  .pill.leave { background: #dc2626; color: #fff; }
+
+  .quiz-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .quiz-q { font-size: 13px; font-weight: 600; margin: 0 0 10px; }
+  .quiz-opt { width: 100%; text-align: left; border: 2px solid #e5e7eb; border-radius: 8px; background: #fff; padding: 8px 12px; font-size: 13px; margin-bottom: 6px; color: #333; }
+  .quiz-opt:hover { border-color: #9ca3af; }
+  .quiz-opt.correct { border-color: #22c55e; background: #f0fdf4; }
+  .quiz-opt.wrong { border-color: #f87171; background: #fef2f2; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-expl { font-size: 12px; color: #4b5563; background: #f9fafb; border-radius: 8px; padding: 8px 10px; margin-top: 8px; line-height: 1.6; }
+  .quiz-score { border-radius: 12px; padding: 18px; text-align: center; color: #fff; background: #5049a7; }
+  .quiz-score h3 { margin: 0 0 4px; font-size: 22px; }
+  .quiz-score p { margin: 0; font-size: 13px; }
+
+  .nav-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 26px; gap: 10px; flex-wrap: wrap; }
+  .btn-big { font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+  .link-reset { background: none; border: 0; color: #6b7280; font-size: 13px; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+var TEAMS = "#5049a7", GREEN = "#2e7d32";
+
+var railItems = [
+  { id: "activite", label: "Activité", emoji: "🔔", desc: "Ici, tu vois tout ce qui te concerne : les messages où on t'a mentionnée (@toi), les réponses à tes questions et les devoirs notés. C'est ta boîte de réception dans Teams." },
+  { id: "chat", label: "Conversation", emoji: "💬", desc: "La conversation privée, c'est pour parler avec une personne ou un petit groupe. Comme un SMS, mais dans Teams. Personne d'autre ne voit ces messages." },
+  { id: "equipes", label: "Équipes", emoji: "👥", desc: "C'est le cœur de Teams ! Tu y trouves les équipes (comme ta classe), divisées en canaux (comme des salles de classe : Général, Mathématiques, Travaux de groupe…). Toute la classe y partage des messages et des fichiers. Tu peux aussi masquer un canal que tu n'utilises pas et le faire réapparaître quand tu veux." },
+  { id: "calendrier", label: "Calendrier", emoji: "📅", desc: "Le calendrier montre tous tes rendez-vous : les cours en visio, les réunions de groupe… Tu peux rejoindre un cours en ligne d'un simple clic." },
+  { id: "devoirs", label: "Devoirs", emoji: "📝", desc: "La partie la plus importante pour un élève ! Tu y vois les devoirs donnés par le professeur, la date limite, et tu y remets ton travail." }
+];
+
+var fakeEquipes = [
+  { id: "3eA", nom: "Classe de 3e A", initiales: "3A", couleur: "#5049a7", channels: ["Général", "Mathématiques", "Français", "Sortie au musée"] },
+  { id: "theatre", nom: "Club Théâtre", initiales: "CT", couleur: "#c0392b", channels: ["Général", "Costumes & décors"] },
+  { id: "volcans", nom: "Exposé Volcans", initiales: "EV", couleur: "#2e7d32", channels: ["Général", "Recherches", "Diaporama"] }
+];
+
+var calJours = [
+  { idx: 0, nom: "Lun", date: "28 sept" },
+  { idx: 1, nom: "Mar", date: "29 sept" },
+  { idx: 2, nom: "Mer", date: "30 sept", today: true },
+  { idx: 3, nom: "Jeu", date: "1 oct" },
+  { idx: 4, nom: "Ven", date: "2 oct" }
+];
+var calEvents = [
+  { jour: 1, debut: 9, fin: 10, titre: "Cours de français en ligne", emoji: "📚" },
+  { jour: 2, debut: 14, fin: 15, titre: "Cours de maths en ligne", emoji: "🧮" },
+  { jour: 3, debut: 16, fin: 17, titre: "Réunion Club Théâtre", emoji: "🎭" }
+];
+
+var quiz = [
+  { q: "Où vas-tu pour voir les devoirs donnés par ton professeur ?",
+    options: ["Dans une conversation privée", "Dans Devoirs 📝", "Dans Activité"], answer: 1,
+    explain: "Exactement ! « Devoirs » regroupe tout ce que le professeur demande : consignes, dates limites et remise du travail." },
+  { q: "Tu veux parler uniquement avec ton amie Léa, sans que la classe voie. Qu'utilises-tu ?",
+    options: ["Le canal Général", "La conversation privée 💬", "Le calendrier"], answer: 1,
+    explain: "La conversation privée, c'est fait pour ça : une conversation entre une personne ou un petit groupe, visible seulement par eux." },
+  { q: "Quelle est la différence entre une équipe et un canal ?",
+    options: ["Aucune, c'est pareil", "L'équipe est ta classe, le canal est un sujet dans cette classe", "Le canal est ta classe, l'équipe est un sujet"], answer: 1,
+    explain: "L'équipe = la classe entière. Le canal = une « salle » pour un sujet (ex. : Général, Mathématiques). Ça garde les conversations bien rangées." },
+  { q: "Que signifie « @mentionner » quelqu'un (@Sophie) ?",
+    options: ["Lui envoyer un message privé secret", "L'alerter : elle reçoit une notification", "La supprimer de l'équipe"], answer: 1,
+    explain: "Le @ devant un prénom envoie une notification à cette personne : elle est sûre de voir le message dans Activité 🔔." },
+  { q: "Ton cours en visio commence. Que fais-tu juste avant de parler ?",
+    options: ["Tu cries pour vérifier le son", "Tu vérifies que ton micro 🎙️ est bien activé (et tu le coupes quand tu ne parles pas)", "Tu fermes Teams"], answer: 1,
+    explain: "Bonne pratique : micro activé pour parler, coupé quand on se tait, pour éviter que toute la classe entende ton chien aboyer 🐶." }
+];
+
+var chapters = [
+  { id: "interface", n: 1, emoji: "🧭", title: "Explorer l'interface", desc: "Découvre la barre à gauche : chaque icône expliquée." },
+  { id: "message", n: 2, emoji: "💬", title: "Écrire un message", desc: "Publie un message dans le canal et joins un fichier avec le trombone 📎." },
+  { id: "devoirs", n: 3, emoji: "📝", title: "Rendre un devoir", desc: "Fichier à remettre, quiz Forms ou BookWidget : découvre les types de devoirs." },
+  { id: "visio", n: 4, emoji: "📅", title: "Rejoindre la visio", desc: "Entre dans un cours en ligne : micro, caméra, politesse." },
+  { id: "quiz", n: 5, emoji: "❓", title: "Quiz final", desc: "5 questions pour vérifier que tout est compris." }
+];
+
+var state = {
+  view: "home",
+  visited: [],
+  railActive: null, railVisited: [],
+  openTeam: "3eA", channel: "3eA/Général", hidden: ["3eA/Sortie au musée"], showHidden: {},
+  calSelected: null,
+  messages: [
+    { who: "Mme Dupont", role: "Prof", text: "Bonjour à toutes et à tous ! Bienvenue dans le canal Général de la classe. 🎉" },
+    { who: "Léa", role: "Élève", text: "Bonjour Madame ! Heureuse d'être là 😊" }
+  ],
+  msgText: "", msgFile: null,
+  opened: null, rendu: false, rep: null, formsEnvoye: false,
+  joined: false, mic: false, cam: false,
+  answers: {}
+};
+
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function bubble(inner, tone) {
+  return '<div class="bubble' + (tone === "green" ? " bubble-green" : "") + '">' + inner + "</div>";
+}
+
+// ---------- Actions ----------
+function goHome() { state.view = "home"; render(); }
+function openView(id) {
+  state.view = id;
+  if (state.visited.indexOf(id) < 0) state.visited.push(id);
+  render();
+}
+function railClick(id) {
+  state.railActive = id;
+  if (state.railVisited.indexOf(id) < 0) state.railVisited.push(id);
+  render();
+}
+function toggleTeam(id) { state.openTeam = state.openTeam === id ? null : id; render(); }
+function pickChannel(k) { state.channel = k; render(); }
+function hideChannel(k) { if (state.hidden.indexOf(k) < 0) state.hidden.push(k); if (state.channel === k) state.channel = null; render(); }
+function showChannel(k) { state.hidden = state.hidden.filter(function (x) { return x !== k; }); render(); }
+function toggleHiddenList(id) { state.showHidden[id] = !state.showHidden[id]; render(); }
+function calSelect(i) { state.calSelected = i; render(); }
+function attachMsgFile() { if (!state.msgFile) state.msgFile = "photo-exercice-fractions.jpg"; render(); }
+function removeMsgFile() { state.msgFile = null; render(); }
+function sendMsg() {
+  var t = state.msgText.trim();
+  if (!t && !state.msgFile) return;
+  state.messages.push({ who: "Toi", role: "Élève", text: t, file: state.msgFile });
+  state.msgText = ""; state.msgFile = null;
+  render();
+}
+function openDevoir(id) { state.opened = id; render(); }
+function remettre() { state.rendu = true; render(); }
+function pickRep(i) { state.rep = i; render(); }
+function sendForms() { if (state.rep !== null) state.formsEnvoye = true; render(); }
+function joinVisio() { state.joined = true; render(); }
+function toggleMic() { state.mic = !state.mic; render(); }
+function toggleCam() { state.cam = !state.cam; render(); }
+function answer(qi, oi) { if (state.answers[qi] === undefined) { state.answers[qi] = oi; render(); } }
+function resetQuiz() { state.answers = {}; render(); }
+
+// ---------- Visuels ----------
+function railIcons(interactive) {
+  return railItems.map(function (it) {
+    var cls = "rail-item";
+    if (interactive) {
+      if (state.railActive === it.id) cls += " rail-active";
+    } else {
+      cls += it.id === "chat" ? " rail-active" : " rail-dim";
+    }
+    return '<button class="' + cls + '" ' + (interactive ? 'onclick="railClick(\'' + it.id + '\')"' : "") + ">" +
+      (interactive && state.railVisited.indexOf(it.id) >= 0 ? '<span class="rail-check">✅</span>' : "") +
+      (!interactive && it.id === "chat" ? '<span class="here">Tu es ici</span>' : "") +
+      '<span class="ri-e">' + it.emoji + '</span><span class="ri-l">' + it.label + "</span></button>";
+  }).join("");
+}
+
+function equipesVisual() {
+  var missionDone = state.hidden.indexOf("3eA/Sortie au musée") < 0;
+  var teams = fakeEquipes.map(function (eq) {
+    var hiddenCh = eq.channels.filter(function (ch) { return state.hidden.indexOf(eq.id + "/" + ch) >= 0; });
+    var visibleCh = eq.channels.filter(function (ch) { return state.hidden.indexOf(eq.id + "/" + ch) < 0; });
+    var inner = "";
+    if (state.openTeam === eq.id) {
+      inner = "<div>" +
+        visibleCh.map(function (ch) {
+          var k = eq.id + "/" + ch;
+          return '<div class="channel' + (state.channel === k ? " channel-active" : "") + '">' +
+            '<button class="channel-btn" onclick="pickChannel(\'' + k + '\')"># ' + ch + "</button>" +
+            '<button class="channel-hide" title="Masquer ce canal" onclick="hideChannel(\'' + k + '\')">🙈</button></div>';
+        }).join("") +
+        (hiddenCh.length > 0
+          ? '<button class="hidden-toggle" onclick="toggleHiddenList(\'' + eq.id + '\')">👁 Canaux masqués (' + hiddenCh.length + ")</button>" +
+            (state.showHidden[eq.id]
+              ? hiddenCh.map(function (ch) {
+                  return '<div class="hidden-channel"><span># ' + ch + "</span>" +
+                    '<button onclick="showChannel(\'' + eq.id + "/" + ch + '\')">👁 Afficher</button></div>';
+                }).join("")
+              : "")
+          : "") +
+        "</div>";
+    }
+    return '<div class="team"><button class="team-head" onclick="toggleTeam(\'' + eq.id + '\')">' +
+      '<span class="team-badge" style="background:' + eq.couleur + '">' + eq.initiales + "</span>" +
+      '<span class="team-name">' + eq.nom + '</span><span class="arrow">' + (state.openTeam === eq.id ? "▾" : "▸") + "</span></button>" + inner + "</div>";
+  }).join("");
+  return '<div class="panel">' +
+    '<div class="panel-title">Tes équipes (clique pour explorer 👇)</div>' +
+    (missionDone
+      ? '<div class="mission mission-done">🎉 <b>Mission réussie !</b> Le canal « Sortie au musée » est réapparu dans la liste de la Classe de 3e A. Bravo, tu sais maintenant retrouver un canal masqué !</div>'
+      : '<div class="mission">🕵️ <b>Mission :</b> le canal <b>« Sortie au musée »</b> de la Classe de 3e A a été masqué ! Retrouve-le et fais-le réapparaître. <b>Indice :</b> déplie la Classe de 3e A, puis regarde en bas de ses canaux… 👁</div>') +
+    '<div class="teams-list">' + teams + "</div>" +
+    '<div class="panel-note">💡 Chaque équipe est une classe ou un groupe ; chaque canal (le #) est un « sujet » dans cette équipe. <b>Un canal masqué n\'est pas supprimé !</b> Essaie : survole un canal et clique sur 🙈 pour le masquer, puis déplie « 👁 Canaux masqués » pour le faire réapparaître. Dans le vrai Teams, on masque un canal via le menu ⋯ du canal (ou clic droit → <b>Masquer</b>), et on le retrouve en bas de la liste de l\'équipe, sous « Canaux masqués » : un clic sur l\'œil 👁 l\'affiche à nouveau.</div></div>';
+}
+
+function calendrierVisual() {
+  var cellH = 30, hDebut = 8, hFin = 18, rows = "", h;
+  for (h = hDebut; h <= hFin; h++) {
+    rows += '<div class="cal-row"><div class="cal-hour">' + h + "h</div>" +
+      calJours.map(function () { return '<div class="cal-cell"></div>'; }).join("") + "</div>";
+  }
+  var blocks = calEvents.map(function (ev, i) {
+    var top = (ev.debut - hDebut) * cellH, height = (ev.fin - ev.debut) * cellH;
+    return '<button class="cal-event" style="top:' + top + "px;height:" + height + "px;left:calc(44px + (100% - 44px) / 5 * " + ev.jour + ');width:calc((100% - 44px) / 5)" onclick="calSelect(' + i + ')">' +
+      '<span class="ce-t">' + ev.emoji + " " + ev.titre + '</span><span class="ce-h">' + ev.debut + "h – " + ev.fin + "h</span></button>";
+  }).join("");
+  var sel = state.calSelected !== null ? calEvents[state.calSelected] : null;
+  return '<div class="panel">' +
+    '<div class="cal-toolbar">' +
+    '<button class="cal-btn">Aujourd\'hui</button><button class="cal-btn">‹</button><button class="cal-btn">›</button>' +
+    '<span class="cal-period">28 septembre – 2 octobre 2026</span><button class="cal-btn">▾ Semaine</button><span class="cal-spacer"></span>' +
+    '<span class="cal-btn">🔎 Rechercher</span><span class="cal-btn">📹 Réunion instantanée</span><button class="cal-btn-new">+ Nouvelle réunion</button></div>' +
+    '<div style="overflow-x:auto"><div style="min-width:430px">' +
+    '<div class="cal-heads"><div></div>' +
+    calJours.map(function (j) {
+      return '<div class="cal-day' + (j.today ? " today" : "") + '">' + j.nom + " " + j.date + (j.today ? ' <span class="today-tag">• aujourd\'hui</span>' : "") + "</div>";
+    }).join("") + "</div>" +
+    '<div class="cal-grid">' + rows + blocks + "</div></div></div>" +
+    (sel ? '<div class="cal-detail"><b style="color:' + TEAMS + '">' + sel.emoji + " " + sel.titre + "</b> — de " + sel.debut + "h à " + sel.fin + "h, en ligne. Dans le vrai Teams, clique sur l'événement puis sur <b>Rejoindre</b> pour entrer dans la réunion — c'est ce que tu as appris dans la rubrique 4 ! 👉</div>" : "") +
+    '<div class="panel-note">💡 Le calendrier affiche tous tes rendez-vous : chaque bloc coloré est une réunion (un cours en visio, une réunion de groupe…). Clique sur les blocs pour voir les détails ! Les flèches « ‹ › » permettent de changer de semaine et « Aujourd\'hui » de revenir à la date du jour.</div></div>';
+}
+
+function politesseBubble() {
+  return bubble("🤝 <b>Rappel de politesse</b> — dans Teams, tu parles à de vraies personnes, comme en classe :" +
+    "<ul>" +
+    "<li>Dis toujours <b>bonjour</b> avant de poser ta question, et <b>merci</b> après une réponse.</li>" +
+    "<li>Pas de MAJUSCULES PARTOUT : sur Internet, c'est comme si tu criais ! 😠</li>" +
+    "<li>Pas d'insultes ni de moqueries, même en plaisantant : les messages restent écrits.</li>" +
+    "<li>Écris correctement, pas de langage SMS : « slt c koi le devoir » → « Bonjour, quel est le devoir pour demain ? »</li>" +
+    "<li>Signale tout message désagréable à un adulte (professeur·e, parents) : ne réponds pas.</li>" +
+    "</ul>");
+}
+
+function msgHtml(m) {
+  var fileHtml = m.file ? '<span class="msg-file">📄 ' + esc(m.file) + "</span>" : "";
+  var textHtml = m.text ? '<div class="msg-body">' + esc(m.text) + "</div>" : "";
+  return '<div class="msg"><div class="avatar' + (m.role === "Prof" ? " prof" : "") + '">' + m.who[0] + "</div><div>" +
+    '<div class="msg-meta"><b>' + esc(m.who) + "</b> • " + (m.role === "Prof" ? "Professeure" : "Élève") + "</div>" +
+    textHtml + fileHtml + "</div></div>";
+}
+
+// ---------- Vues ----------
+function chapterWrap(n, title, inner) {
+  return '<div class="chap-head"><span class="chap-num">' + n + "</span><h2>" + title + '</h2><button class="mini-home" onclick="goHome()">⌂ Accueil</button></div>' + inner;
+}
+function backHomeBar(extra) {
+  return '<div class="nav-bottom"><button class="btn-primary btn-big" onclick="goHome()">⌂ Revenir au départ</button>' + (extra || "") + "</div>";
+}
+
+function renderHome() {
+  var found = state.visited.length;
+  var progress = Math.round((found / chapters.length) * 100);
+  return '<div class="progress-wrap"><div class="progress-bar"><div style="width:' + progress + '%"></div></div>' +
+    '<span class="progress-label">' + found + "/" + chapters.length + " rubriques découvertes</span></div>" +
+    '<div class="wrap"><div class="home-head"><div class="wave">👋</div><h1>Bienvenue dans ta mission Teams !</h1>' +
+    "<p>Tu n'as jamais utilisé Microsoft Teams ? Parfait ! Choisis une rubrique ci-dessous et découvre-la à ton rythme. Tout est une <b>simulation</b> : rien ne peut casser, clique partout sans peur. Tu peux revenir à cette page à tout moment avec le bouton <b>Accueil</b>.</p></div>" +
+    '<div class="cards">' + chapters.map(function (c) {
+      return '<button class="card" onclick="openView(\'' + c.id + '\')"><span class="c-emoji">' + c.emoji + "</span><div>" +
+        '<div class="c-title">' + c.n + ". " + c.title + (state.visited.indexOf(c.id) >= 0 ? " ✅" : "") + "</div>" +
+        '<div class="c-desc">' + c.desc + "</div></div></button>";
+    }).join("") + "</div>" +
+    bubble("🏁 <b>Le saviez-vous ?</b> Une fois les 5 rubriques découvertes, tu sauras faire l'essentiel : lire tes notifications, écrire à ta classe, rendre un devoir (fichier, quiz Forms ou BookWidget) et suivre un cours en ligne. Bonne exploration !") +
+    "</div>";
+}
+
+function renderInterface() {
+  var current = railItems.filter(function (i) { return i.id === state.railActive; })[0];
+  var pane;
+  if (!current) {
+    pane = '<div class="pane"><p class="hint">👈 Clique sur une icône à gauche…</p></div>';
+  } else {
+    pane = '<div class="pane"><div class="pane-title">' + current.emoji + " " + current.label + "</div>" +
+      '<p style="font-size:13px;color:#374151;line-height:1.65;margin:6px 0 0">' + current.desc + "</p>" +
+      (current.id === "equipes" ? equipesVisual() : "") +
+      (current.id === "calendrier" ? calendrierVisual() : "") +
+      "</div>";
+  }
+  return '<div class="wrap">' +
+    chapterWrap(1, "L'interface : la barre à gauche, ta boussole",
+      "<p class=\"lead\">Clique sur <b>les icônes</b> de la barre violette pour découvrir à quoi chacune sert. Explore-les dans l'ordre que tu veux !</p>" +
+      '<div class="window"><div class="win-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="win-title">Microsoft Teams (simulation)</span></div>' +
+      '<div class="win-body"><div class="rail">' + railIcons(true) + "</div>" + pane + "</div></div>" +
+      '<div class="tiny" style="margin-top:10px">' + state.railVisited.length + "/" + railItems.length + " icônes explorées</div>") +
+    backHomeBar() + "</div>";
+}
+
+function renderMessage() {
+  var msgs = state.messages.map(msgHtml).join("") +
+    (state.messages.length > 2
+      ? bubble("🎉 Bravo, ta publication est en ligne ! Tout le monde voit maintenant ton texte et ton fichier dans le canal. Astuce : écris <b>@prénom</b> pour prévenir quelqu'un en particulier, ou clique sur <b>Répondre</b> sous un message pour ne pas perdre le fil de la conversation.", "green")
+      : "");
+  return '<div class="wrap">' +
+    chapterWrap(2, "Écrire un message",
+      "<p class=\"lead\">Regarde la barre violette à gauche : on est bien dans « 💬 Conversation ». Un canal, c'est comme un mur d'affichage de la classe : tout le monde voit les messages. Écris un petit bonjour, essaie le bouton 📎 pour joindre un fichier, puis envoie !</p>" +
+      '<div class="window"><div class="win-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="win-title">Microsoft Teams (simulation)</span></div>' +
+      '<div class="win-body"><div class="rail">' + railIcons(false) + "</div>" +
+      '<div style="flex:1;min-width:0"><div class="chan-head">👥 Classe de 3e A &nbsp;›&nbsp; Général</div>' +
+      '<div class="msgs">' + msgs + "</div>" +
+      '<div class="composer">' +
+      (state.msgFile ? '<div class="file-chip">📄 <span>' + state.msgFile + '</span><button onclick="removeMsgFile()">✕</button></div>' : "") +
+      '<div class="composer-row"><input placeholder="Écris ton message ici…" value="' + esc(state.msgText) + '" oninput="state.msgText=this.value" onkeydown="if(event.key===\'Enter\')sendMsg()"/>' +
+      '<button class="btn-primary" onclick="sendMsg()">Envoyer ➤</button></div>' +
+      '<div class="composer-tools"><button class="btn-attach" onclick="attachMsgFile()">📎 Joindre un fichier</button>' +
+      '<span class="tiny">(Simulation : le trombone insère « photo-exercice-fractions.jpg » dans ta publication)</span></div>' +
+      "</div></div></div></div></div>" +
+      bubble("📎 <b>Comment insérer un fichier dans une publication (dans le vrai Teams) ?</b> Sous la zone de message, clique sur le trombone <b>Joindre</b> : une fenêtre s'ouvre et te propose <b>Parcourir Teams et OneDrive</b> (fichiers déjà en ligne) ou <b>Parcourir cet appareil</b> (fichiers de l'ordinateur ou de la tablette). Choisis ton fichier : il apparaît sous ton message, puis clique sur <b>Envoyer</b> — le fichier part avec la publication, toute la classe peut le télécharger.") +
+      politesseBubble()) +
+    backHomeBar() + "</div>";
+}
+
+function dvCard(opts) {
+  return (opts.clickable ? '<button class="dv-card" onclick="openDevoir(\'' + opts.id + '\')">' : '<div class="dv-card static">') +
+    '<span class="course-badge" style="background:' + opts.couleur + '">' + opts.initiales + "</span>" +
+    '<span class="dv-main"><span class="dv-title">' + opts.titre + '</span><span class="dv-sub">' + opts.sub + "</span></span>" +
+    '<span class="chip ' + opts.chipClass + '">' + opts.chip + "</span>" +
+    (opts.clickable ? "</button>" : "</div>");
+}
+
+function renderDevoirs() {
+  var list =
+    '<div><div class="searchbar">🔎 Rechercher (⌘ E)</div>' +
+    '<div class="dv-tabs"><span class="dv-tab active">À venir</span><span class="dv-tab">En retard</span><span class="dv-tab">Terminés</span><span class="dv-tab">Brouillons</span></div>' +
+    '<div class="dv-group">À rendre cette semaine</div>' +
+    dvCard({ clickable: true, id: "fractions", couleur: TEAMS, initiales: "M", titre: "Exercice : les fractions 📄",
+      sub: "Mathématiques • Fichier à remettre • Échéance vendredi 9 octobre à 23:59 • 20 points",
+      chipClass: state.rendu ? "remis" : "afaire", chip: state.rendu ? "🟢 Remis" : "🟠 À faire" }) +
+    dvCard({ clickable: true, id: "forms", couleur: "#0a6c5d", initiales: "Q", titre: "Quiz : les fractions 📝 Forms",
+      sub: "Mathématiques • Questionnaire à compléter • Échéance vendredi 9 octobre à 23:59 • Note automatique",
+      chipClass: state.formsEnvoye ? "remis" : "afaire", chip: state.formsEnvoye ? "🟢 Remis" : "🟠 À faire" }) +
+    '<div class="dv-group">Plus tard</div>' +
+    dvCard({ couleur: "#2e7d32", initiales: "V", titre: "Exercice interactif : les volcans 🧩 BookWidget",
+      sub: "Exposé Volcans • Exercice à compléter en ligne • Échéance jeudi 15 octobre à 23:59 • 20 points",
+      chipClass: "afaire", chip: "🟠 À faire" }) +
+    '<div class="dv-group">Passés</div>' +
+    dvCard({ couleur: "#c0392b", initiales: "F", titre: "Lecture : Le Petit Prince, chapitre 2 📄",
+      sub: "Français • Rendu le mardi 6 octobre • 10 points", chipClass: "termine", chip: "🔵 Terminé — 18/20" }) +
+    '<div class="dv-note">💡 Regarde bien la petite icône à côté du titre : 📄 = un fichier à remettre, 📝 Forms = un questionnaire, 🧩 BookWidget = un exercice interactif. La cloche 🔔 d\'« Activité » te prévient dès qu\'un nouveau devoir est donné.</div></div>';
+
+  var detail;
+  if (state.opened === "fractions") {
+    detail = '<div class="dv-detail"><button class="back-link" onclick="openDevoir(null)">← Tous les devoirs</button>' +
+      '<div class="dv-head-row"><span class="course-badge" style="background:' + TEAMS + '">M</span><span class="dv-title">Exercice : les fractions 📄</span>' +
+      '<span class="chip ' + (state.rendu ? "remis" : "afaire") + '">' + (state.rendu ? "🟢 Remis" : "🟠 À faire") + "</span></div>" +
+      '<div class="tiny">Mathématiques • Fichier à remettre • Échéance vendredi 9 octobre à 23:59 • 20 points</div>' +
+      "<p style=\"font-size:13px;color:#374151;margin:0;line-height:1.65\">Consigne de Mme Dupont : « Complète la fiche d'exercices page 12. Écris tes réponses dans un document Word ou sur ta feuille, puis prends-la en photo. »</p>" +
+      bubble("ℹ️ <b>Comment ça marche dans le vrai Teams ?</b><ol>" +
+        "<li>Clique sur le devoir dans la liste pour lire les instructions.</li>" +
+        "<li>Sous « Mon travail », clique sur <b>+ Ajouter un travail</b> pour joindre ton fichier (document Word, photo…).</li>" +
+        "<li>Clique sur <b>Remettre</b> : ton statut passe de « À faire » à « Remis ».</li>" +
+        "<li>Quand le professeur corrige, ta note apparaît et une notification 🔔 arrive dans « Activité ».</li></ol>" +
+        "⚠️ <b>Attention :</b> tous les devoirs ne demandent pas un fichier ! Regarde l'icône à côté du titre — retourne dans la liste et essaie le quiz 📝 Forms pour voir la différence.") +
+      '<button class="btn-primary' + (state.rendu ? " btn-green" : "") + '" onclick="remettre()">' + (state.rendu ? "✅ Travail remis !" : "📤 Remettre") + "</button>" +
+      (state.rendu ? bubble("🎉 Bravo ! Ton statut passe à « 🟢 Remis » — retourne dans la liste pour le voir. Le professeur a reçu ton travail, tu ne peux plus le perdre !", "green") : "") +
+      "</div>";
+  } else {
+    var opts = ["4/8", "1", "3/8", "1/2"];
+    detail = '<div class="dv-detail"><button class="back-link" onclick="openDevoir(null)">← Tous les devoirs</button>' +
+      '<div class="dv-head-row"><span class="course-badge" style="background:#0a6c5d">Q</span><span class="dv-title">Quiz : les fractions 📝 Forms</span>' +
+      '<span class="chip ' + (state.formsEnvoye ? "remis" : "afaire") + '">' + (state.formsEnvoye ? "🟢 Remis" : "🟠 À faire") + "</span></div>" +
+      '<div class="tiny">Mathématiques • Questionnaire Microsoft Forms • Échéance vendredi 9 octobre à 23:59 • Note automatique</div>' +
+      bubble("ℹ️ <b>Ce devoir n'est pas un fichier à rendre !</b> C'est un questionnaire <b>Microsoft Forms</b>. Dans le vrai Teams, clique sur le devoir puis sur <b>Ouvrir</b> : le formulaire s'ouvre, tu réponds aux questions et tu cliques sur <b>Envoyer</b>. Ta note part <b>automatiquement</b> au professeur — rien à joindre, rien à imprimer ! Certains professeurs utilisent aussi <b>BookWidget</b> (exercices interactifs, comme le devoir « volcans » de la liste) : c'est pareil, l'exercice s'ouvre directement et se valide tout seul.") +
+      '<div class="forms-box"><div class="forms-head">📝 Formulaire — Quiz fractions (simulation)</div><div class="forms-body">' +
+      '<div class="forms-q">Question 1 : Combien font 3/4 + 1/4 ?</div>' +
+      opts.map(function (o, i) {
+        return '<button class="forms-opt' + (state.rep === i ? " selected" : "") + '"' +
+          (state.formsEnvoye ? " disabled" : ' onclick="pickRep(' + i + ')"') + ">⦿ " + o + "</button>";
+      }).join("") +
+      (state.formsEnvoye
+        ? bubble("✅ Réponses envoyées ! Le professeur recevra ta note <b>automatiquement</b> — tu n'as eu aucun fichier à joindre. C'est toute la magie des devoirs Forms et BookWidget !", "green")
+        : '<button class="forms-send"' + (state.rep === null ? " disabled" : ' onclick="sendForms()"') + ">Envoyer mes réponses</button>") +
+      "</div></div></div>";
+  }
+
+  return '<div class="wrap">' +
+    chapterWrap(3, "Rendre un devoir",
+      "<p class=\"lead\">Voici l'application « Devoirs » du vrai Teams. Attention : un devoir n'est pas toujours un fichier à rendre ! Ça peut être un <b>fichier</b>, mais aussi un <b>quiz Microsoft Forms</b> ou un <b>exercice BookWidget</b> à compléter directement. Essaie les deux devoirs de cette semaine 👇</p>" +
+      '<div class="window"><div class="purple-bar">📝 Devoirs</div>' + (state.opened ? detail : list) + "</div>") +
+    backHomeBar() + "</div>";
+}
+
+function renderVisio() {
+  var inner;
+  if (!state.joined) {
+    inner = '<div style="padding:14px"><button class="btn-primary btn-green btn-big" style="background:' + GREEN + '" onclick="joinVisio()">▶ Rejoindre la réunion</button></div>';
+  } else {
+    inner = '<div style="padding:14px">' +
+      '<div class="visio-screen">' + (state.cam ? "📹 Ta caméra est allumée (imagine ton visage ici 😊)" : "📷 Caméra coupée — tu vois le cours, on ne te voit pas") + "</div>" +
+      '<div class="visio-controls">' +
+      '<button class="pill ' + (state.mic ? "mic-on" : "off") + '" onclick="toggleMic()">' + (state.mic ? "🎙️ Micro activé" : "🔇 Micro coupé") + "</button>" +
+      '<button class="pill ' + (state.cam ? "cam-on" : "off") + '" onclick="toggleCam()">' + (state.cam ? "📹 Caméra allumée" : "📷 Caméra coupée") + "</button>" +
+      '<button class="pill leave">⏻ Quitter</button></div>' +
+      '<div style="margin-top:12px">' +
+      bubble("🎯 Règles de politesse : on coupe son micro quand on ne parle pas, et on lève la « main ✋ » (bouton Réactions) pour demander la parole.") +
+      "</div></div>";
+  }
+  return '<div class="wrap">' +
+    chapterWrap(4, "Rejoindre un cours en visio",
+      "<p class=\"lead\">Réunion ne veut pas dire complication : un clic pour rejoindre, deux boutons à connaître — le micro et la caméra. Essaie les deux !</p>" +
+      '<div class="window"><div class="purple-bar">📅 Calendrier — Mercredi 14h00 : Cours de maths en ligne</div>' + inner + "</div>") +
+    backHomeBar() + "</div>";
+}
+
+function renderQuiz() {
+  var cards = quiz.map(function (q, qi) {
+    var answered = state.answers[qi] !== undefined;
+    var opts = q.options.map(function (opt, oi) {
+      var cls = "quiz-opt";
+      if (answered) {
+        if (oi === q.answer) cls += " correct";
+        else if (state.answers[qi] === oi) cls += " wrong";
+      }
+      return '<button class="' + cls + '"' + (answered ? " disabled" : ' onclick="answer(' + qi + "," + oi + ')"') + ">" +
+        (answered && oi === q.answer ? "✅ " : answered && state.answers[qi] === oi ? "❌ " : "") + opt + "</button>";
+    }).join("");
+    return '<div class="quiz-card"><p class="quiz-q">' + (qi + 1) + ". " + q.q + "</p>" + opts +
+      (answered ? '<div class="quiz-expl">💡 ' + q.explain + "</div>" : "") + "</div>";
+  }).join("");
+  var done = Object.keys(state.answers).length === quiz.length;
+  var score = quiz.reduce(function (acc, q, i) { return acc + (state.answers[i] === q.answer ? 1 : 0); }, 0);
+  var scoreHtml = done
+    ? '<div class="quiz-score"><h3>' + (score >= 4 ? "🏆 Excellent !" : score >= 3 ? "👍 Bien joué !" : "💪 Presque !") + "</h3>" +
+      "<p>Score : " + score + "/" + quiz.length + " — " + (score >= 3 ? "Tu es officiellement prêt(e) à utiliser Teams avec ta classe !" : "Reviens sur les rubriques qui t'ont posé question 😉") + "</p></div>"
+    : "";
+  return '<div class="wrap">' +
+    chapterWrap(5, "Quiz final : es-tu prêt(e) pour Teams ?",
+      "<p class=\"lead\">Réponds aux 5 questions. Tu vois immédiatement si c'est juste, avec une explication. Tu peux recommencer autant de fois que tu veux !</p>" +
+      cards + scoreHtml) +
+    backHomeBar(done ? '<button class="link-reset" onclick="resetQuiz()">🔁 Refaire le quiz</button>' : "") +
+    "</div>";
+}
+
+// ---------- Rendu principal ----------
+function render() {
+  var app = document.getElementById("app");
+  var header = '<div class="header"><div class="logo">🧑‍🏫</div><div class="ht"><b>Mission Teams</b><span>Apprends Microsoft Teams pas à pas — spécial grands débutants</span></div>' +
+    (state.view !== "home" ? '<button class="btn-home-top" onclick="goHome()">⌂ Accueil</button>' : "") + "</div>";
+  var body = "";
+  if (state.view === "home") body = renderHome();
+  else if (state.view === "interface") body = renderInterface();
+  else if (state.view === "message") body = renderMessage();
+  else if (state.view === "devoirs") body = renderDevoirs();
+  else if (state.view === "visio") body = renderVisio();
+  else if (state.view === "quiz") body = renderQuiz();
+  app.innerHTML = header + body;
+}
+render();
+</script>
+</body>
+</html>
